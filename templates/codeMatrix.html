@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>运行 Python 代码</title>
+</head>
+<body>
+    <h3>输入 Python 代码：</h3>
+    <textarea id="pyCode" rows="10" cols="50"></textarea>
+    <br>
+    <button onclick="runPython()">运行</button>
+    <h3>运行结果：</h3>
+    <pre id="output"></pre>
+    
+    <script>
+        async function runPython() {
+            let code = document.getElementById("pyCode").value;
+            let response = await fetch("/run", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ code: code })
+            });
+            let result = await response.json();
+            document.getElementById("output").innerText = result.output || result.error;
+        }
+    </script>
+</body>
+</html>

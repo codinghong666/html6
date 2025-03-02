@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, jsonify
 import sympy as sp
-
+import os
+import uuid
+import sympy as sp
+import ast 
+import subprocess
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -29,7 +33,46 @@ def index():
         return render_template('index.html', result=transposed_matrix, latexmatrix=latexmatrix)
 
     return render_template('index.html')
+@app.route('/codeinput')
+def codeinput():
+    return render_template('codeMatrix.html')
 
+@app.route('/run', methods=['POST'])
+def run_code():
+    data = request.get_json()
+    code = data.get("code", "")
+    
+    # 生成唯一的文件名，避免冲突
+    filename = f'temp_{uuid.uuid4().hex}.py'
+    
+    # 将用户输入的代码保存到文件中
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(code)
+    
+    try:
+        # 使用 subprocess 运行刚保存的 Python 文件
+        result = subprocess.run(
+            ['python3', filename],
+            capture_output=True,
+            text=True,
+            timeout=10  # 限制运行时间，防止长时间运行
+        )
+        output = result.stdout.strip()
+        output_list = ast.literal_eval(output)
+        m=sp.Matrix(output_list)
+        print(m)
+        print(sp.latex(m))
+        error = result.stderr
+    except Exception as e:
+        output = ""
+        error = str(e)
+    finally:
+        # 执行完毕后删除临时文件
+        if os.path.exists(filename):
+            os.remove(filename)
+    
+    # 返回执行结果给前端
+    return jsonify({"output": output, "error": error})
 if __name__ == '__main__':
     app.run(debug=True)
 print(11111)
