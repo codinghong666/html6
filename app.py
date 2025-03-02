@@ -5,6 +5,7 @@ import uuid
 import sympy as sp
 import ast 
 import subprocess
+from sympy.parsing.latex import parse_latex
 app = Flask(__name__)
 @app.route('/')
 def index():
@@ -71,8 +72,39 @@ def run_code():
         # 执行完毕后删除临时文件
         if os.path.exists(filename):
             os.remove(filename)
+
     
     # 返回执行结果给前端
     return jsonify({"output": output_latex, "error": error})
+
+@app.route('/integrate', methods=['GET', 'POST'])
+def integrate():
+    if request.method == 'POST':
+        data = request.get_json()
+        expression = data.get("expression")
+        variable = data.get("variable")
+
+        try:
+            # 使用 SymPy 解析 LaTeX 表达式
+            parsed_expr = parse_latex(expression)
+            # 使用 sympy 积分
+            print(parsed_expr)
+            var = sp.symbols(variable)
+            print(var)
+            integral = sp.simplify(sp.integrate(parsed_expr, var))
+            integral=sp.cancel(integral)
+            print(integral)
+            # 返回结果
+            bk=variable.split(" ")
+            rg=''
+            if(len(bk)==3):
+                rg='_'+bk[1]+'^'+bk[2]
+            result = '\int'+rg+expression+'='+sp.latex(integral)
+            return jsonify({"result": result})
+
+        except Exception as e:
+            return jsonify({"error": str(e)})
+
+    return render_template('integrate.html')
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,port=8080)
