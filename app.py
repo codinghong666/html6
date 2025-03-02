@@ -6,9 +6,11 @@ import sympy as sp
 import ast 
 import subprocess
 app = Flask(__name__)
-
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
+    return render_template('index.html')
+@app.route('/handinput', methods=['GET', 'POST'])
+def handinput():
     if request.method == 'POST':
         rows = int(request.form.get('rows'))
         cols = int(request.form.get('cols'))
@@ -30,12 +32,12 @@ def index():
         transposed_matrix =sp.latex(matrix.T)
         
 
-        return render_template('index.html', result=transposed_matrix, latexmatrix=latexmatrix)
+        return render_template('handinput.html', result=transposed_matrix, latexmatrix=latexmatrix)
 
-    return render_template('index.html')
+    return render_template('handinput.html')
 @app.route('/codeinput')
 def codeinput():
-    return render_template('codeMatrix.html')
+    return render_template('codeinput.html')
 
 @app.route('/run', methods=['POST'])
 def run_code():
