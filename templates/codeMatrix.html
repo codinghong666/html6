@@ -4,14 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>运行 Python 代码</title>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
 </head>
 <body>
     <h3>输入 Python 代码：</h3>
-    <textarea id="pyCode" rows="10" cols="50"></textarea>
+    <textarea id="pyCode" rows="10" cols="50">
+a=[]
+for i in range(2):
+    b=[]
+    for j in range(3):
+        b.append(j)
+    a.append(b)
+print(a)
+    </textarea>
     <br>
     <button onclick="runPython()">运行</button>
     <h3>运行结果：</h3>
-    <pre id="output"></pre>
+    <div id="output">
+        <p>$$ {{output}} $$</p>
+    </div> <!-- 修正了闭合标签 -->
     
     <script>
         async function runPython() {
@@ -22,7 +35,12 @@
                 body: JSON.stringify({ code: code })
             });
             let result = await response.json();
-            document.getElementById("output").innerText = result.output || result.error;
+            
+            // 正确插入 LaTeX 输出
+            document.getElementById("output").innerHTML = `$$ ${result.output} $$` || result.error;
+            
+            // 调用 MathJax 渲染 LaTeX
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById("output")]);
         }
     </script>
 </body>

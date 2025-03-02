@@ -60,8 +60,7 @@ def run_code():
         output = result.stdout.strip()
         output_list = ast.literal_eval(output)
         m=sp.Matrix(output_list)
-        print(m)
-        print(sp.latex(m))
+        output_latex=sp.latex(m)
         error = result.stderr
     except Exception as e:
         output = ""
@@ -72,7 +71,6 @@ def run_code():
             os.remove(filename)
     
     # 返回执行结果给前端
-    return jsonify({"output": output, "error": error})
+    return jsonify({"output": output_latex, "error": error})
 if __name__ == '__main__':
     app.run(debug=True)
-print(11111)
