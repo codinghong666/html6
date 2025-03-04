@@ -5,7 +5,18 @@ import uuid
 import sympy as sp
 import ast 
 import subprocess
+import base64
+import shutil
 from sympy.parsing.latex import parse_latex
+import time
+
+
+class timer:
+    def __init__(self):
+        self.start = time.time()
+
+    def end(self):
+        print("%.2f" % (time.time() - self.start), end="s\n")
 app = Flask(__name__)
 @app.route('/')
 def index():
@@ -83,28 +94,90 @@ def integrate():
         data = request.get_json()
         expression = data.get("expression")
         variable = data.get("variable")
-
         try:
-            # 使用 SymPy 解析 LaTeX 表达式
+            # 使用 Sympy 解析 LaTeX 表达式
             parsed_expr = parse_latex(expression)
-            # 使用 sympy 积分
-            print(parsed_expr)
-            var = sp.symbols(variable)
-            print(var)
-            integral = sp.simplify(sp.integrate(parsed_expr, var))
-            integral=sp.cancel(integral)
-            print(integral)
-            # 返回结果
-            bk=variable.split(" ")
-            rg=''
-            if(len(bk)==3):
-                rg='_'+bk[1]+'^'+bk[2]
-            result = '\int'+rg+expression+'='+sp.latex(integral)
+            # 检查变量字符串是否包含积分上下界（例如 "x 0 1"）
+            bk = variable.split(" ")
+            if len(bk) == 3:
+                # 第一个部分作为变量
+                var = sp.symbols(bk[0])
+                # 将下界和上界转化为数字或符号表达式
+                lower = sp.sympify(bk[1])
+                upper = sp.sympify(bk[2])
+                # 计算定积分
+                integral = sp.integrate(parsed_expr, (var, lower, upper))
+                # 格式化积分区间的 LaTeX 表示（例如 _{0}^{1} ）
+                rg = '_{' + sp.latex(lower) + '}^{' + sp.latex(upper) + '}'
+            else:
+                # 只有变量，没有积分上下界，计算不定积分
+                var = sp.symbols(variable)
+                integral = sp.integrate(parsed_expr, var)
+                rg = ''
+            # 对结果进行化简和约分
+            integral = sp.simplify(integral)
+            integral = sp.cancel(integral)
+            # 生成 LaTeX 格式的积分结果
+            result = r'\int' + rg + expression + '=' + sp.latex(integral)
             return jsonify({"result": result})
-
         except Exception as e:
             return jsonify({"error": str(e)})
-
     return render_template('integrate.html')
+@app.route('/handwritten', methods=['GET', 'POST'])
+def handwritten():
+    if request.method == 'GET':
+        # 返回包含手写输入画布的 HTML 页面
+        return render_template('handwritten.html')
+    if request.method == 'POST':
+        # 以下为 POST 请求，处理图像数据
+        data = request.get_json()
+        image_data = data.get("image")
+
+        if not image_data:
+            return jsonify({"error": "No image data received"}), 400
+
+        # 解析 base64 数据并转换为图片
+        image_data = image_data.split(",")[1]  # 移除 'data:image/png;base64,' 前缀
+        image_bytes = base64.b64decode(image_data)
+        
+        folder_path = '/Users/coding_hong/Documents/code/html/html6/texteller/TexTeller/src'
+        image_filename = f"handwritten_math.png"
+        image_path = os.path.join(folder_path, image_filename)
+        
+        # 将图片写入指定文件夹
+        try:
+            with open(image_path, "wb") as img_file:
+                img_file.write(image_bytes)
+            print("图片已保存到：", image_path)
+        except Exception as e:
+            return jsonify({"error": f"保存图片出错: {str(e)}"}), 500
+        print(image_path)
+        folder_path = '/Users/coding_hong/Documents/code/html/html6/texteller/TexTeller/src'  # 请替换为你的目标文件夹路径
+        
+        # target_path = os.path.join(folder_path, os.path.basename(image_path))
+        # shutil.copy(image_path, target_path)
+
+        command = 'python inference.py -img '+'"'+image_filename+'" --inference-mode mps'
+        print(command)
+        try:
+            T=timer()
+            print("in")
+            result = subprocess.run(command, shell=True, cwd=folder_path, capture_output=True, text=True)
+            print("Command output:")
+            print(result.stdout)  # 打印命令的标准输出
+            if result.stderr:
+                print("Command error:")
+                print(result.stderr)  # 打印命令的标准错误
+        except Exception as e:
+            print(f"Error occurred: {e}")
+        latex_content = ""
+        output_file = os.path.join(folder_path, "output.txt")
+        if os.path.exists(output_file):
+            with open(output_file, "r", encoding="utf-8") as f:
+                latex_content = f.read().strip()
+        T.end()
+        return jsonify({"latex": latex_content})
+
+    
 if __name__ == '__main__':
     app.run(debug=True,port=8080)

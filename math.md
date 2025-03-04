@@ -1,1 +1,3 @@
-$$\int_{a}^{b} sinx$$
+$$
+\int_{a}^{b} \frac{ \sin x}{ \cos x+e^{x}}dx
+$$
