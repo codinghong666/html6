@@ -343,7 +343,6 @@ def handwritten():
     # T=timer()
     print("in")
     result = subprocess.run(command, shell=True, cwd=folder_path, capture_output=True, text=True)
-    print("Command output:")
     # except:
 
 
