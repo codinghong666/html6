@@ -228,14 +228,15 @@ def handinput():
                     return jsonify({'error': f'矩阵元素 ({i},{j}) 缺失'}), 400
             matrix.append(row)
         matrix=sp.Matrix(matrix)
-        # Convert the matrix to a SymPy matrix (though we store strings, SymPy can handle symbolic matrices)
         latexmatrix = sp.latex(matrix)
-        
         transposed_matrix =sp.latex(matrix.T)
-        
-
-        return render_template('handinput.html', result=transposed_matrix, latexmatrix=latexmatrix)
-
+        if matrix.shape[0] == matrix.shape[1]:
+            determinant = sp.latex(matrix.det())
+            if matrix.det()!=0:
+                inverse = sp.latex(matrix.inv())
+                return render_template('handinput.html', result=transposed_matrix, latexmatrix=latexmatrix,determinant=determinant,inverse=inverse)
+        else:
+            return render_template('handinput.html', result=transposed_matrix, latexmatrix=latexmatrix)
     return render_template('handinput.html')
 @app.route('/codeinput')
 def codeinput():

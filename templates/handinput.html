@@ -40,13 +40,21 @@
 
         <!-- 显示结果 -->
         <div id="result" class="result">
-            {% if result %}
-                <h3>逆矩阵:</h3>
-                <p>$$ {{ result }} $$</p>
-            {% endif %}
             {% if latexmatrix %}
                 <h3>矩阵:</h3>
                 <p>$$ {{ latexmatrix }} $$</p>
+            {% endif %}
+            {% if result %}
+                <h3>矩阵转置:</h3>
+                <p>$$ {{ result }} $$</p>
+            {% endif %}
+            {% if determinant %}
+            <h3>矩阵的行列式:</h3>
+            <p>$$ {{ determinant }} $$</p>
+            {% endif %}
+            {% if inverse %}
+                <h3>逆矩阵:</h3>
+                <p>$$ {{ inverse }} $$</p>
             {% endif %}
         </div>
     </div>
