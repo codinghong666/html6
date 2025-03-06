@@ -4,14 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
 </head>
 <body>
-    <div class="link-container">
+    <!-- 标签栏 -->
+    <div class="header">
+        <a href="handinput" target="_blank">Hand Input</a>
+        <a href="codeinput" target="_blank">Code Matrix</a>
+        <a href="integrate" target="_blank">Integrate</a>
+        <a href="handwritten" target="_blank">Handwritten</a>
+    </div>
+
+    <!-- 其他链接容器 -->
+    <!-- <div class="link-container">
         <a href="handinput" target="_blank">Go to Hand Input</a>
         <a href="codeinput" target="_blank">Go to Code Matrix</a>
         <a href="integrate" target="_blank">Go to Integrate</a>
         <a href="handwritten" target="_blank">Go to Handwritten</a>
-    </div>
+    </div> -->
 </body>
 </html>

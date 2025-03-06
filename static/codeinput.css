@@ -1,0 +1,110 @@
+:root {
+    --primary-color: #004a99;
+    --secondary-color: #0073cf;
+    --background-color: #f0f0f0;
+    --text-color: #333;
+    --white-color: #fff;
+    --black-color: #000;
+    --button-bg-color: #0073cf;
+    --button-hover-color: #004a99;
+    --form-bg-color: rgba(173, 216, 230, 0.5);
+    --output-bg-color: rgba(240, 240, 240, 0.9);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+}
+
+h3 {
+    color: var(--primary-color);
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: var(--form-bg-color);
+    resize: vertical;
+    margin-bottom: 15px;
+    transition: border-color 0.3s;
+}
+
+textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 18px;
+    color: var(--white-color);
+    background-color: var(--button-bg-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    display: block;
+    margin: 0 auto;
+}
+
+button:hover {
+    background-color: var(--button-hover-color);
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(2px);
+}
+
+#output {
+    background-color: var(--output-bg-color);
+    padding: 15px;
+    margin-top: 30px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 18px;
+    text-align: center;
+}
+
+#output p {
+    color: var(--text-color);
+    font-size: 18px;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    h3 {
+        font-size: 20px;
+    }
+
+    textarea {
+        font-size: 14px;
+    }
+
+    button {
+        font-size: 16px;
+        width: 100%;
+    }
+
+    #output {
+        font-size: 16px;
+    }
+}
