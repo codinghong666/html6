@@ -238,6 +238,8 @@ def handinput():
         else:
             return render_template('handinput.html', result=transposed_matrix, latexmatrix=latexmatrix)
     return render_template('handinput.html')
+
+
 @app.route('/codeinput')
 def codeinput():
     return render_template('codeinput.html')
@@ -263,21 +265,31 @@ def run_code():
             timeout=10  # 限制运行时间，防止长时间运行
         )
         output = result.stdout.strip()
+        # print(output)
         output_list = ast.literal_eval(output)
         m=sp.Matrix(output_list)
         output_latex=sp.latex(m)
+        transposed_matrix =sp.latex(m.T)
         error = result.stderr
     except Exception as e:
         output = ""
         error = str(e)
-    finally:
-        # 执行完毕后删除临时文件
-        if os.path.exists(filename):
-            os.remove(filename)
+    # finally:
+    #     # 执行完毕后删除临时文件
+    #     if os.path.exists(filename):
+    #         os.remove(filename)
 
     
     # 返回执行结果给前端
-    return jsonify({"output": output_latex, "error": error})
+    if m.shape[0] == m.shape[1]:
+        determinant = sp.latex(m.det())
+        if m.det()!=0:
+            inverse = sp.latex(m.inv())
+            return jsonify({"output": output_latex, "error": error,"transposed":transposed_matrix,"determinant":determinant,"inverse":inverse})
+        else:
+            return jsonify({"output": output_latex, "error": error,"transposed":transposed_matrix,"determinant":determinant})
+    else:
+        return jsonify({"output": output_latex, "error": error,"transposed":transposed_matrix})
 
 @app.route('/integrate', methods=['GET', 'POST'])
 def integrate():
