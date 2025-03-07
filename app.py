@@ -274,10 +274,10 @@ def run_code():
     except Exception as e:
         output = ""
         error = str(e)
-    # finally:
-    #     # 执行完毕后删除临时文件
-    #     if os.path.exists(filename):
-    #         os.remove(filename)
+    finally:
+        # 执行完毕后删除临时文件
+        if os.path.exists(filename):
+            os.remove(filename)
 
     
     # 返回执行结果给前端
