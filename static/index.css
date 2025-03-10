@@ -22,6 +22,7 @@ body {
     opacity: 0;
     animation: fadeIn 1s forwards;
     background-color: rgba(240, 240, 240, 0.2);
+    text-align: center;
 }
 
 @keyframes fadeIn {
@@ -115,4 +116,13 @@ body {
 
 .link-container a:active {
     transform: translateY(2px);
+}
+
+/* 打字机效果介绍内容 */
+.intro {
+    margin-top: 50px;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text-color);
+    padding: 20px;
 }
