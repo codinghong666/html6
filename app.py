@@ -146,7 +146,7 @@ def run_streamlit():
 
 @app.route('/handwritten', methods=['GET'])
 def handwritten():
-    folder_path = '/Users/coding_hong/Documents/code/html/html6/texteller/TexTeller/src'
+    folder_path = os.path.join(os.path.dirname(__file__), 'texteller', 'TexTeller', 'src')
     command = './start_web.sh'
     print(command)
     try:
@@ -160,5 +160,7 @@ def handwritten():
 
 
     
+# if __name__ == '__main__':
+#     app.run(debug=True,port=8080)
 if __name__ == '__main__':
-    app.run(debug=True,port=8080)
+    app.run(host='0.0.0.0', port=8080, debug=True)
