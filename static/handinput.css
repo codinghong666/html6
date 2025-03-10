@@ -32,13 +32,16 @@ body {
     }
 }
 
+/* 毛玻璃 + 半透明效果 */
 .container {
     max-width: 900px;
     margin: 20px auto;
     padding: 20px;
-    background-color: var(--white-color);
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.6);
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
 }
 
 h2 {
@@ -60,9 +63,9 @@ h2 {
     width: 100%;
     padding: 10px;
     font-size: 14px;
-    border: 1px solid #ccc;
+    border: 1px solid rgba(200, 200, 200, 0.6);
     border-radius: 5px;
-    background-color: var(--form-bg-color);
+    background-color: rgba(255, 255, 255, 0.5);
     transition: border-color 0.3s;
 }
 
@@ -77,14 +80,16 @@ button {
     color: var(--white-color);
     background-color: var(--button-bg-color);
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 button:hover {
     background-color: var(--button-hover-color);
     transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 button:active {
