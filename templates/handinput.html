@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>矩阵计算器</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='handinput.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='mylabel.css') }}">
+    <script src="{{ url_for('static', filename='mylabel.js') }}" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </head>
 
@@ -14,6 +16,10 @@
         <h2>矩阵计算器</h2>
         
         <!-- 输入矩阵大小 -->
+        <!-- <typed-text-effect
+                            texts='[" Hand Input Can calculate the transpose of a matrix. Enter the number of rows and columns, fill in the matrix elements."]'
+                            delay="70" font-size="1em"></typed-text-effect> -->
+        <br>
         <form id="matrix-size-form" method="POST" onsubmit="generateMatrix(); return false;">
             <div class="mb-3">
                 <label for="rows" class="form-label">矩阵行数 (n):</label>
